@@ -24,8 +24,10 @@ public class LoggingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest,
         try
         {
             _logger.LogInformation($"Try executing {requestName} at {DateTime.UtcNow.ToString()}");
+            var handleDele= await next();
+            _logger.LogInformation($"Try executed {requestName} at {DateTime.UtcNow.ToString()}");
 
-            return await next();
+            return handleDele;
         }
         catch (Exception ex)
         {

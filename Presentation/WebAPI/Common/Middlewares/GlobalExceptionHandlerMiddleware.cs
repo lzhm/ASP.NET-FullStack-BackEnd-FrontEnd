@@ -4,6 +4,7 @@
 // ----------------------------------------------------------------------------
 
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Authentication;
 
@@ -12,18 +13,21 @@ namespace WebAPI.Common.Middlewares;
 public class GlobalExceptionHandlerMiddleware
 {
     private readonly RequestDelegate _next;
+    private readonly ILogger<GlobalExceptionHandlerMiddleware> _logger;
 
-    public GlobalExceptionHandlerMiddleware(RequestDelegate next)
+    public GlobalExceptionHandlerMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlerMiddleware> logger)
     {
         _next = next;
+        this._logger = logger;
     }
 
     public async Task InvokeAsync(HttpContext httpContext, IExceptionHandler customExceptionHandler)
     {
         try
         {
+            _logger.LogInformation($"excuting url: {httpContext.Request.GetDisplayUrl()}");
             await _next(httpContext);
-
+            _logger.LogInformation($"excuted url: {httpContext.Request.GetDisplayUrl()}");
             if (httpContext.Response.StatusCode == StatusCodes.Status401Unauthorized)
             {
                 await customExceptionHandler.TryHandleAsync(httpContext, new UnauthorizedAccessException("Unauthorized - Token missing or invalid"), CancellationToken.None);

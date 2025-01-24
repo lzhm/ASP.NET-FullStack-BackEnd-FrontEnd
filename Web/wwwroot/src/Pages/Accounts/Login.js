@@ -63,7 +63,7 @@ const app = createApp({
             try {
                 console.log('url:' + useConstant.baseUrl);
 
-                const response = await request('post', useConstant.baseUrl+'/Account/Login', {
+                const response = await request('post', '/Account/Login', {
                     email: loginForm.email,
                     password: loginForm.password
                 })

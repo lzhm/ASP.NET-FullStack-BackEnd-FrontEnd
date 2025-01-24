@@ -39,7 +39,7 @@ const app = createApp({
         const {
             paged,
             apiUrl
-        } = usePagedList(useConstant.baseUrl + '/UserProfile/GetUsersByUserId', `userId=${userId.value}`)
+        } = usePagedList('/UserProfile/GetUsersByUserId', `userId=${userId.value}`)
         const imageUrl = ref(null)
         const selectedProfilePicture = ref(null)
         const pageMode = reactive({
@@ -175,14 +175,14 @@ const app = createApp({
                     try {
                         changePageMode('read')
 
-                        const response = await request('delete', useConstant.baseUrl + `/UserProfile/DeleteUserProfile`, {
+                        const response = await request('delete', `/UserProfile/DeleteUserProfile`, {
                             email: paged.selectedRow.email,
                             userId: userId.value
                         })
 
                         if (response?.data?.code === 200) {
 
-                            const response = await request('post', useConstant.baseUrl + '/Account/Logout', { userId: userId.value })
+                            const response = await request('post', '/Account/Logout', { userId: userId.value })
                             clearStorage()
                             Swal.fire({
                                 title: 'Deleted!',

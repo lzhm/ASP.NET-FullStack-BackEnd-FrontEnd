@@ -122,7 +122,7 @@ if (app.Configuration.GetValue<bool>("IsDemoVersion"))
 app.UseExceptionHandler(options => { });
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+//app.UseStaticFiles();
 app.UseRouting();
 app.UseCors();
 
@@ -130,7 +130,7 @@ app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
+//app.MapRazorPages();
 app.MapControllers();
 
 if (app.Environment.IsDevelopment() || app.Configuration.GetValue<bool>("EnableSwaggerInProduction"))

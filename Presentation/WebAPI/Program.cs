@@ -7,6 +7,7 @@ using Application;
 using Infrastructure;
 using Infrastructure.DataAccessManagers.EFCores;
 using Infrastructure.SeedManagers;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData;
 using Microsoft.OpenApi.Models;
@@ -49,9 +50,11 @@ builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 builder.Services.AddCors(opt =>
 {
     opt.AddDefaultPolicy(builder => builder
-        .AllowAnyOrigin()
+        //  .AllowAnyOrigin()    AllowAnyOrigin 和  AllowCredentials 不能同时设置
+        .WithOrigins("http://localhost:5274", "http://localhost:52744")
         .AllowAnyMethod()
-        .AllowAnyHeader());
+        .AllowAnyHeader()
+        .AllowCredentials());
 });
 builder.Services.AddRazorPages();
 builder.Services.AddControllers()
@@ -107,6 +110,12 @@ builder.Services.RegisterDemoSeedManager(builder.Configuration);
 
 var app = builder.Build();
 
+//app.UseCookiePolicy(new CookiePolicyOptions()
+//{
+//    MinimumSameSitePolicy = SameSiteMode.None,
+//    HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always,
+//    Secure = CookieSecurePolicy.None,
+//});
 //craete database
 app.CreateDatabase();
 

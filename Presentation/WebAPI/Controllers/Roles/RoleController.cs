@@ -107,7 +107,7 @@ public class RoleController : BaseApiController
         int limit = top;
 
         var command = new GetRolesByUserRequest { Page = page, Limit = limit, UserId = userId };
-        var response = await _sender.Send(command, cancellationToken); ;
+        var response = await _sender.Send(command, cancellationToken);
 
         return Ok(new ApiSuccessResult<GetRolesByUserResult>
         {

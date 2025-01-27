@@ -7,6 +7,7 @@ using Application.Features.Accounts.Commands;
 using Domain.Constants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 using WebAPI.Common.Exceptions;
@@ -20,6 +21,22 @@ namespace WebAPI.Controllers.Accounts;
 public class AccountController : BaseApiController
 {
     private readonly IConfiguration _configuration;
+    private CookieOptions _cookieOptions = new CookieOptions
+    {
+        // Set the secure flag, which Chrome's changes will require for SameSite none.
+        // Note this will also require you to be running on HTTPS.
+        Secure = true,
+
+        // Set the cookie to HTTP only which is good practice unless you really do need
+        // to access it client side in scripts.
+        HttpOnly = true,
+
+        // Add the SameSite attribute, this will emit the attribute with a value of none.
+        SameSite = SameSiteMode.None
+
+        // The client should follow its default cookie policy.
+        // SameSite = SameSiteMode.Unspecified
+    };
     public AccountController(ISender sender, IConfiguration configuration) : base(sender)
     {
         _configuration = configuration;
@@ -124,29 +141,18 @@ public class AccountController : BaseApiController
             {
                 expireInMinute = 15.0;
             }
+            _cookieOptions.Expires = DateTime.UtcNow.AddMinutes(expireInMinute);
 
             if (accessTokenCookieName != null)
             {
                 HttpContext.Response.Cookies.Delete(accessTokenCookieName);
-                HttpContext.Response.Cookies.Append(accessTokenCookieName, accessToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(expireInMinute)
-                });
+                HttpContext.Response.Cookies.Append(accessTokenCookieName, accessToken, _cookieOptions);
             }
 
             if (refreshTokenCookieName != null)
             {
                 HttpContext.Response.Cookies.Delete(refreshTokenCookieName);
-                HttpContext.Response.Cookies.Append(refreshTokenCookieName, refreshToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddDays(TokenConsts.ExpiryInDays)
-                });
+                HttpContext.Response.Cookies.Append(refreshTokenCookieName, refreshToken, _cookieOptions);
 
             }
         }
@@ -266,31 +272,20 @@ public class AccountController : BaseApiController
             {
                 expireInMinute = 15.0;
             }
+            _cookieOptions.Expires = DateTime.UtcNow.AddMinutes(expireInMinute);
 
             if (accessTokenCookieName != null)
             {
                 // Set cookie HttpOnly for accessToken
                 HttpContext.Response.Cookies.Delete(accessTokenCookieName);
-                HttpContext.Response.Cookies.Append(accessTokenCookieName, newAccessToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddMinutes(expireInMinute)
-                });
+                HttpContext.Response.Cookies.Append(accessTokenCookieName, newAccessToken, _cookieOptions);
             }
 
             if (refreshTokenCookieName != null)
             {
                 // Set cookie HttpOnly for refreshToken
                 HttpContext.Response.Cookies.Delete(refreshTokenCookieName);
-                HttpContext.Response.Cookies.Append(refreshTokenCookieName, newRefreshToken, new CookieOptions
-                {
-                    HttpOnly = true,
-                    Secure = false,
-                    SameSite = SameSiteMode.Strict,
-                    Expires = DateTime.UtcNow.AddDays(TokenConsts.ExpiryInDays)
-                });
+                HttpContext.Response.Cookies.Append(refreshTokenCookieName, newRefreshToken, _cookieOptions);
 
             }
         }

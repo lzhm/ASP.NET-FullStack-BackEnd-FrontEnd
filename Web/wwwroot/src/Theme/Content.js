@@ -94,22 +94,37 @@ if (firstName && lastName) {
 }
 
 //Get currently active config
-fetch('/api/Config/GetActiveConfig', {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json',
-    }
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return response.json();
-})
-.then(data => {
-    document.getElementById('activeConfig').textContent = data?.content?.data?.name;
-    document.getElementById('activeCurrency').textContent = data?.content?.data?.currencyName;
-})
-.catch(error => {
-    console.error('Error during API call:', error);
-});
+fetch('/src/config.json', { method: 'GET' })
+    .then(response => {
+        if (response.status != 200) {
+            throw Error(data.statusText);
+        }
+        return response.json();
+    })
+    .then(data => {
+        
+        var baseUrl = data.baseUrl;
+        fetch(baseUrl + '/api/Config/GetActiveConfig', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById('activeConfig').textContent = data?.content?.data?.name;
+            document.getElementById('activeCurrency').textContent = data?.content?.data?.currencyName;
+        })
+        .catch(error => {
+            console.error('Error during API call:', error);
+        });
+    })
+    .catch (error=> {
+        console.error('Error during load config:', error);
+    });
+

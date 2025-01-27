@@ -33,6 +33,13 @@ export function useAxios() {
         failedQueue.length = 0
     }
 
+    axiosInstance.defaults.withCredentials = true;
+    axiosInstance.interceptors.request.use(
+        (config) => {
+            config.withCredentials = true; // 允许携带cookie
+            return config;
+        }
+    );
     axiosInstance.interceptors.response.use(
         (response) => {
             try {

@@ -94,16 +94,17 @@ if (firstName && lastName) {
 }
 
 //Get currently active config
-fetch('/src/config.json', { method: 'GET' })
-    .then(response => {
-        if (response.status != 200) {
-            throw Error(data.statusText);
-        }
-        return response.json();
-    })
-    .then(data => {
+//fetch('/src/config.json', { method: 'GET' })
+//    .then(response => {
+//        if (response.status != 200) {
+//            throw Error(data.statusText);
+//        }
+//        return response.json();
+//    })
+//    .then(data => {
         
-        var baseUrl = data.baseUrl;
+var baseUrl = useConstant.baseUrl;
+console.log(`baseUrl:${baseUrl}`);
         fetch(baseUrl + '/api/Config/GetActiveConfig', {
             method: 'GET',
             headers: {
@@ -123,8 +124,8 @@ fetch('/src/config.json', { method: 'GET' })
         .catch(error => {
             console.error('Error during API call:', error);
         });
-    })
-    .catch (error=> {
-        console.error('Error during load config:', error);
-    });
+    //})
+    //.catch (error=> {
+    //    console.error('Error during load config:', error);
+    //});
 

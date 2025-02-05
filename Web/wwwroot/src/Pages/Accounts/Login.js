@@ -10,7 +10,8 @@ import { useStorageManager } from 'useStorageManager'
 import indobutton from 'indobutton'
 import indoloading from 'indoloading'
 import { useAxios } from 'useAxios'
-import { useConstant } from 'useConstant'
+//import { useConstant } from 'useConstant'
+
 
 
 const app = createApp({

@@ -1,3 +1,3 @@
-﻿export const useConstant = {
+﻿const useConstant = {
     baseUrl: 'http://localhost:5275'
 }

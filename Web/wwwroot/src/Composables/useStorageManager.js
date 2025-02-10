@@ -93,8 +93,12 @@ export function useStorageManager() {
     const removeMainNavigations = () => remove(STORAGE_KEYS.MAIN_NAVIGATIONS)
 
     const saveLoginResult = (data) => {
-        //saveAccessToken(data?.content?.accessToken) //open comment if not using HTTP ONLY COOKIE
-        //saveRefreshToken(data?.content?.refreshToken) //open comment if not using HTTP ONLY COOKIE
+        // for web api config 
+        if (!data?.content?.useHttpOnlyCookieForToken) {
+            saveAccessToken(data?.content?.accessToken) //open comment if not using HTTP ONLY COOKIE
+            saveRefreshToken(data?.content?.refreshToken) //open comment if not using HTTP ONLY COOKIE
+        }
+        
         saveFirstName(data?.content?.firstName)
         saveLastName(data?.content?.lastName)
         saveEmail(data?.content?.email)

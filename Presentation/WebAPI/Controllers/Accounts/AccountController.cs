@@ -130,6 +130,7 @@ public class AccountController : BaseApiController
             bool.TryParse(_configuration["Jwt:UseHttpOnlyCookieForToken"], out useHttpOnlyCookieForToken);
         }
 
+        response.UseHttpOnlyCookieForToken=useHttpOnlyCookieForToken;
         if (useHttpOnlyCookieForToken)
         {
 
@@ -161,7 +162,7 @@ public class AccountController : BaseApiController
         {
             Code = StatusCodes.Status200OK,
             Message = $"Success executing {nameof(LoginAsync)}",
-            Content = response
+            Content = response,
         });
     }
 

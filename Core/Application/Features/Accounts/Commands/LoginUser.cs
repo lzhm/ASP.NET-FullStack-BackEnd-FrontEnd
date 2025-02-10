@@ -20,6 +20,11 @@ public class LoginUserResult
     public string? LastName { get; init; }
     public List<string>? UserClaims { get; init; }
     public List<MainNavDto>? MainNavigations { get; init; }
+
+    /// <summary>
+    ///  是否用cookie保存token
+    /// </summary>
+    public bool UseHttpOnlyCookieForToken { get; set; }
 }
 
 public class LoginUserRequest : IRequest<LoginUserResult>
